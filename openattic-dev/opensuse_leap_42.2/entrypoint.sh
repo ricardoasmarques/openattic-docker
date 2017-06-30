@@ -98,6 +98,9 @@ cfg_file=/etc/icinga/objects/openattic_static.cfg' \
   chgrp -R openattic /etc/ceph
   chmod 644 /etc/ceph/ceph.client.admin.keyring
 
+  cd /srv/openattic/backend
+  find * -name '*.pyc' | xargs rm
+
   systemd --system &> systemd.log &
   SYSD_PID=$!
   sleep 3
@@ -227,6 +230,7 @@ EOF
   systemctl stop apache2
 
   cd /srv/openattic/backend
+  find * -name '*.pyc' | xargs rm
   coverage run --source='.' manage.py test -t . -v 2
   coverage html
 }
