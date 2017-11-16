@@ -2,11 +2,12 @@
 
 
 function init_pgsql_db {
-  mkdir -p /var/lib/pgsql
+  mkdir -p ls
   chown -R postgres:postgres /var/lib/pgsql
 
 su postgres <<'EOF'
-/usr/lib/postgresql-init start
+initdb -D /var/lib/pgsql/data
+/usr/bin/pg_ctl start -D /var/lib/pgsql/data -s -o "-p 5432" -w -t 300
 psql --command "CREATE USER openattic WITH SUPERUSER PASSWORD 'openattic';"
 createdb -O openattic openattic
 echo "host all  all    0.0.0.0/0  md5" > /var/lib/pgsql/data/pg_hba.conf
